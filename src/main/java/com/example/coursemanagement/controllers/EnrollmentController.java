@@ -1,6 +1,9 @@
 package com.example.coursemanagement.controllers;
 
 import com.example.coursemanagement.dto.ApiResponse;
+import com.example.coursemanagement.dto.EnrollCourseRequest;
+import com.example.coursemanagement.dto.EnrollmentDetail;
+import com.example.coursemanagement.exceptions.BusinessException;
 import com.example.coursemanagement.exceptions.ResourceNotFoundException;
 import com.example.coursemanagement.models.Enrollment;
 import com.example.coursemanagement.services.EnrollmentService;
@@ -43,6 +46,21 @@ public class EnrollmentController {
         Enrollment created = enrollmentService.createEnrollment(enrollment);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ApiResponse<>(true, "Enrollment created successfully", created));
+    }
+
+    @PostMapping("/enroll-course")
+    public ResponseEntity<ApiResponse<EnrollmentDetail>> enrollCourse(@RequestBody EnrollCourseRequest request) {
+        try {
+            EnrollmentDetail detail = enrollmentService.enrollCourse(request);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(new ApiResponse<>(true, "Enrollment successful", detail));
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ApiResponse<>(false, e.getMessage(), null));
+        } catch (BusinessException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse<>(false, e.getMessage(), null));
+        }
     }
 
     @PutMapping("/{id}")
