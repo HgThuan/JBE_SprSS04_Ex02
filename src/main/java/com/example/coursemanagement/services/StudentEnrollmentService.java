@@ -85,4 +85,47 @@ public class StudentEnrollmentService {
 
         studentEnrollmentRepository.save(enrollment);
     }
+
+    public com.example.coursemanagement.dto.CourseEnrollmentResponse enrollStudentInCourse(Long courseId, Long studentId) {
+        if (!courseService.existsByIdAndStatus(courseId, "Active")) {
+            throw new BusinessException("Course does not exist or is not active");
+        }
+
+        if (studentEnrollmentRepository.existsByCourseIdAndStudentId(courseId, studentId)) {
+            throw new BusinessException("Student is already enrolled in this course");
+        }
+
+        Student student = studentService.getStudentById(studentId);
+        Course course = courseService.getCourseById(courseId);
+
+        StudentEnrollment enrollment = new StudentEnrollment(student, course);
+        enrollment = studentEnrollmentRepository.save(enrollment);
+
+        return new com.example.coursemanagement.dto.CourseEnrollmentResponse(
+                enrollment.getStudent().getId(),
+                enrollment.getCourse().getId(),
+                enrollment.getEnrolledAt()
+        );
+    }
+
+    public void dropoutStudentFromCourse(Long courseId, Long studentId) {
+        StudentEnrollment enrollment = studentEnrollmentRepository.findByCourseIdAndStudentId(courseId, studentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Student is not enrolled in this course"));
+        studentEnrollmentRepository.delete(enrollment);
+    }
+
+    public List<com.example.coursemanagement.dto.CourseEnrollmentResponse> searchStudentsInCourse(Long courseId, String studentName) {
+        List<StudentEnrollment> enrollments;
+        if (studentName == null || studentName.trim().isEmpty()) {
+            enrollments = studentEnrollmentRepository.findByCourseId(courseId);
+        } else {
+            enrollments = studentEnrollmentRepository.searchStudentsInCourse(courseId, studentName);
+        }
+
+        return enrollments.stream().map(enrollment -> new com.example.coursemanagement.dto.CourseEnrollmentResponse(
+                enrollment.getStudent().getId(),
+                enrollment.getCourse().getId(),
+                enrollment.getEnrolledAt()
+        )).collect(java.util.stream.Collectors.toList());
+    }
 }

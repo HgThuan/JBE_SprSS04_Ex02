@@ -60,6 +60,10 @@ public class CourseService {
         return course;
     }
 
+    public boolean existsByIdAndStatus(Long id, String status) {
+        return courseRepository.existsByIdAndStatus(id, status);
+    }
+
     public List<com.example.coursemanagement.dto.CourseResponse> getAllCourseResponses() {
         return getAllCourses().stream()
                 .map(this::mapToCourseResponse)
