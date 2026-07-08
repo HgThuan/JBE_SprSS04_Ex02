@@ -59,4 +59,31 @@ public class CourseService {
         courseRepository.delete(course);
         return course;
     }
+
+    public List<com.example.coursemanagement.dto.CourseResponse> getAllCourseResponses() {
+        return getAllCourses().stream()
+                .map(this::mapToCourseResponse)
+                .collect(java.util.stream.Collectors.toList());
+    }
+
+    public com.example.coursemanagement.dto.CourseResponse getCourseResponseById(Long id) {
+        Course course = getCourseById(id);
+        return mapToCourseResponse(course);
+    }
+
+    private com.example.coursemanagement.dto.CourseResponse mapToCourseResponse(Course course) {
+        com.example.coursemanagement.dto.CourseInstructorResponse instructorResponse = null;
+        if (course.getInstructor() != null) {
+            instructorResponse = new com.example.coursemanagement.dto.CourseInstructorResponse(
+                    course.getInstructor().getId(),
+                    course.getInstructor().getName()
+            );
+        }
+        return new com.example.coursemanagement.dto.CourseResponse(
+                course.getId(),
+                course.getTitle(),
+                course.getStatus(),
+                instructorResponse
+        );
+    }
 }

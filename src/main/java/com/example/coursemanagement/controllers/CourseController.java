@@ -22,15 +22,15 @@ public class CourseController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<Course>>> getCourses() {
-        List<Course> data = courseService.getAllCourses();
+    public ResponseEntity<ApiResponse<List<com.example.coursemanagement.dto.CourseResponse>>> getCourses() {
+        List<com.example.coursemanagement.dto.CourseResponse> data = courseService.getAllCourseResponses();
         return ResponseEntity.ok(new ApiResponse<>(true, "Fetched all courses successfully", data));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<Course>> getCourseById(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<com.example.coursemanagement.dto.CourseResponse>> getCourseById(@PathVariable Long id) {
         try {
-            Course course = courseService.getCourseById(id);
+            com.example.coursemanagement.dto.CourseResponse course = courseService.getCourseResponseById(id);
             return ResponseEntity.ok(new ApiResponse<>(true, "Course found", course));
         } catch (ResourceNotFoundException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
