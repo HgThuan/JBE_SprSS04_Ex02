@@ -37,7 +37,10 @@ public class InstructorService {
                 .orElseThrow(() -> new ResourceNotFoundException("Instructor not found with id: " + id));
     }
 
-    public Instructor createInstructor(Instructor instructor) {
+    public Instructor createInstructor(com.example.coursemanagement.dto.InstructorCreateRequest req) {
+        Instructor instructor = new Instructor();
+        instructor.setName(req.getName());
+        instructor.setEmail(req.getEmail());
         return instructorRepository.save(instructor);
     }
 

@@ -46,8 +46,8 @@ public class InstructorController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<Instructor>> createInstructor(@RequestBody Instructor instructor) {
-        Instructor created = instructorService.createInstructor(instructor);
+    public ResponseEntity<ApiResponse<Instructor>> createInstructor(@RequestBody com.example.coursemanagement.dto.InstructorCreateRequest request) {
+        Instructor created = instructorService.createInstructor(request);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ApiResponse<>(true, "Instructor created successfully", created));
     }
