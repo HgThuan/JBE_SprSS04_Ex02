@@ -46,10 +46,10 @@ public class InstructorController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<Instructor>> createInstructor(@RequestBody com.example.coursemanagement.dto.InstructorCreateRequest request) {
-        Instructor created = instructorService.createInstructor(request);
+    public ResponseEntity<ApiResponse<Void>> createInstructor(@RequestBody com.example.coursemanagement.dto.InstructorCreateRequest request) {
+        instructorService.createInstructor(request);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new ApiResponse<>(true, "Instructor created successfully", created));
+                .body(new ApiResponse<>(true, "Instructor created successfully", null));
     }
 
     @PutMapping("/{id}")

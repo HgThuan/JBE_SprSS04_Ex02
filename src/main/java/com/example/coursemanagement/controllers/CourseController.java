@@ -39,17 +39,17 @@ public class CourseController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<Course>> createCourse(@RequestBody Course course) {
-        Course created = courseService.createCourse(course);
+    public ResponseEntity<ApiResponse<Void>> createCourse(@RequestBody com.example.coursemanagement.dto.CourseCreateRequest request) {
+        courseService.createCourse(request);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new ApiResponse<>(true, "Course created successfully", created));
+                .body(new ApiResponse<>(true, "Course created successfully", null));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<Course>> updateCourse(@PathVariable Long id, @RequestBody Course course) {
+    public ResponseEntity<ApiResponse<Void>> updateCourse(@PathVariable Long id, @RequestBody com.example.coursemanagement.dto.CourseUpdateRequest request) {
         try {
-            Course updated = courseService.updateCourse(id, course);
-            return ResponseEntity.ok(new ApiResponse<>(true, "Course updated successfully", updated));
+            courseService.updateCourse(id, request);
+            return ResponseEntity.ok(new ApiResponse<>(true, "Course updated successfully", null));
         } catch (ResourceNotFoundException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ApiResponse<>(false, ex.getMessage(), null));

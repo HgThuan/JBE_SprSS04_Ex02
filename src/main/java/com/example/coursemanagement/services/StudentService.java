@@ -26,7 +26,10 @@ public class StudentService {
                 .orElseThrow(() -> new ResourceNotFoundException("Student not found with id: " + id));
     }
 
-    public Student createStudent(Student student) {
+    public Student createStudent(com.example.coursemanagement.dto.StudentCreateRequest req) {
+        Student student = new Student();
+        student.setName(req.getName());
+        student.setEmail(req.getEmail());
         return studentRepository.save(student);
     }
 }

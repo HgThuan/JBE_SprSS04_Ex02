@@ -14,14 +14,14 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class EnrollmentService {
+public class StudentEnrollmentService {
     private final StudentEnrollmentRepository studentEnrollmentRepository;
     private final CourseService courseService;
     private final InstructorService instructorService;
     private final StudentService studentService;
 
     @Autowired
-    public EnrollmentService(StudentEnrollmentRepository studentEnrollmentRepository, 
+    public StudentEnrollmentService(StudentEnrollmentRepository studentEnrollmentRepository, 
                              CourseService courseService, 
                              InstructorService instructorService,
                              StudentService studentService) {
@@ -73,5 +73,16 @@ public class EnrollmentService {
         enrollment = studentEnrollmentRepository.save(enrollment);
         
         return new EnrollmentDetail(enrollment, course);
+    }
+
+    public void enrollStudent(Long studentId, Long courseId) {
+        Student student = studentService.getStudentById(studentId);
+        Course course = courseService.getCourseById(courseId);
+
+        StudentEnrollment enrollment = new StudentEnrollment();
+        enrollment.setStudent(student);
+        enrollment.setCourse(course);
+
+        studentEnrollmentRepository.save(enrollment);
     }
 }
