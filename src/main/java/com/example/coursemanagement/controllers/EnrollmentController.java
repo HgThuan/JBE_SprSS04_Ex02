@@ -5,7 +5,7 @@ import com.example.coursemanagement.dto.EnrollCourseRequest;
 import com.example.coursemanagement.dto.EnrollmentDetail;
 import com.example.coursemanagement.exceptions.BusinessException;
 import com.example.coursemanagement.exceptions.ResourceNotFoundException;
-import com.example.coursemanagement.models.Enrollment;
+import com.example.coursemanagement.models.StudentEnrollment;
 import com.example.coursemanagement.services.EnrollmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,15 +25,15 @@ public class EnrollmentController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<Enrollment>>> getEnrollments() {
-        List<Enrollment> data = enrollmentService.getAllEnrollments();
+    public ResponseEntity<ApiResponse<List<StudentEnrollment>>> getEnrollments() {
+        List<StudentEnrollment> data = enrollmentService.getAllEnrollments();
         return ResponseEntity.ok(new ApiResponse<>(true, "Fetched all enrollments successfully", data));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<Enrollment>> getEnrollmentById(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<StudentEnrollment>> getEnrollmentById(@PathVariable Long id) {
         try {
-            Enrollment enrollment = enrollmentService.getEnrollmentById(id);
+            StudentEnrollment enrollment = enrollmentService.getEnrollmentById(id);
             return ResponseEntity.ok(new ApiResponse<>(true, "Enrollment found", enrollment));
         } catch (ResourceNotFoundException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -42,8 +42,8 @@ public class EnrollmentController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<Enrollment>> createEnrollment(@RequestBody Enrollment enrollment) {
-        Enrollment created = enrollmentService.createEnrollment(enrollment);
+    public ResponseEntity<ApiResponse<StudentEnrollment>> createEnrollment(@RequestBody StudentEnrollment enrollment) {
+        StudentEnrollment created = enrollmentService.createEnrollment(enrollment);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ApiResponse<>(true, "Enrollment created successfully", created));
     }
@@ -64,9 +64,9 @@ public class EnrollmentController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<Enrollment>> updateEnrollment(@PathVariable Long id, @RequestBody Enrollment enrollment) {
+    public ResponseEntity<ApiResponse<StudentEnrollment>> updateEnrollment(@PathVariable Long id, @RequestBody StudentEnrollment enrollment) {
         try {
-            Enrollment updated = enrollmentService.updateEnrollment(id, enrollment);
+            StudentEnrollment updated = enrollmentService.updateEnrollment(id, enrollment);
             return ResponseEntity.ok(new ApiResponse<>(true, "Enrollment updated successfully", updated));
         } catch (ResourceNotFoundException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)

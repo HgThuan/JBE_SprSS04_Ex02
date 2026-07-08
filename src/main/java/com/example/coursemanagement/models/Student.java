@@ -4,8 +4,8 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "instructors")
-public class Instructor {
+@Table(name = "students")
+public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -16,12 +16,12 @@ public class Instructor {
     @Column(name = "email")
     private String email;
 
-    @OneToMany(mappedBy = "instructor")
-    private List<Course> courses;
+    @OneToMany(mappedBy = "student")
+    private List<StudentEnrollment> enrollments;
 
-    public Instructor() {}
+    public Student() {}
 
-    public Instructor(String name, String email) {
+    public Student(String name, String email) {
         this.name = name;
         this.email = email;
     }
@@ -34,7 +34,7 @@ public class Instructor {
     
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
-
-    public List<Course> getCourses() { return courses; }
-    public void setCourses(List<Course> courses) { this.courses = courses; }
+    
+    public List<StudentEnrollment> getEnrollments() { return enrollments; }
+    public void setEnrollments(List<StudentEnrollment> enrollments) { this.enrollments = enrollments; }
 }

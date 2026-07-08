@@ -27,14 +27,20 @@ public class CourseService {
     }
 
     public Course createCourse(Course course) {
-        return courseRepository.create(course);
+        return courseRepository.save(course);
     }
 
     public Course updateCourse(Long id, Course course) {
-        return courseRepository.update(id, course);
+        Course existingCourse = getCourseById(id);
+        existingCourse.setTitle(course.getTitle());
+        existingCourse.setStatus(course.getStatus());
+        existingCourse.setInstructor(course.getInstructor());
+        return courseRepository.save(existingCourse);
     }
 
     public Course deleteCourseById(Long id) {
-        return courseRepository.deleteById(id);
+        Course course = getCourseById(id);
+        courseRepository.delete(course);
+        return course;
     }
 }

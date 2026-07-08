@@ -1,23 +1,23 @@
 package com.example.coursemanagement.dto;
 
 public class EnrollCourseRequest {
-    private String studentName;
+    private Long studentId;
     private Long courseId;
 
     public EnrollCourseRequest() {
     }
 
-    public EnrollCourseRequest(String studentName, Long courseId) {
-        this.studentName = studentName;
+    public EnrollCourseRequest(Long studentId, Long courseId) {
+        this.studentId = studentId;
         this.courseId = courseId;
     }
 
-    public String getStudentName() {
-        return studentName;
+    public Long getStudentId() {
+        return studentId;
     }
 
-    public void setStudentName(String studentName) {
-        this.studentName = studentName;
+    public void setStudentId(Long studentId) {
+        this.studentId = studentId;
     }
 
     public Long getCourseId() {

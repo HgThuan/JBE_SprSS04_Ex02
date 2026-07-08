@@ -1,25 +1,25 @@
 package com.example.coursemanagement.dto;
 
 import com.example.coursemanagement.models.Course;
-import com.example.coursemanagement.models.Enrollment;
+import com.example.coursemanagement.models.StudentEnrollment;
 
 public class EnrollmentDetail {
-    private Enrollment enrollment;
+    private StudentEnrollment enrollment;
     private Course course;
 
     public EnrollmentDetail() {
     }
 
-    public EnrollmentDetail(Enrollment enrollment, Course course) {
+    public EnrollmentDetail(StudentEnrollment enrollment, Course course) {
         this.enrollment = enrollment;
         this.course = course;
     }
 
-    public Enrollment getEnrollment() {
+    public StudentEnrollment getEnrollment() {
         return enrollment;
     }
 
-    public void setEnrollment(Enrollment enrollment) {
+    public void setEnrollment(StudentEnrollment enrollment) {
         this.enrollment = enrollment;
     }
 

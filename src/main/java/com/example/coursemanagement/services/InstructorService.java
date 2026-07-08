@@ -3,9 +3,9 @@ package com.example.coursemanagement.services;
 import com.example.coursemanagement.dto.InstructorDetail;
 import com.example.coursemanagement.exceptions.ResourceNotFoundException;
 import com.example.coursemanagement.models.Course;
-import com.example.coursemanagement.models.Enrollment;
+import com.example.coursemanagement.models.StudentEnrollment;
 import com.example.coursemanagement.models.Instructor;
-import com.example.coursemanagement.repositories.EnrollmentRepository;
+import com.example.coursemanagement.repositories.StudentEnrollmentRepository;
 import com.example.coursemanagement.repositories.InstructorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,15 +17,15 @@ import java.util.stream.Collectors;
 public class InstructorService {
     private final InstructorRepository instructorRepository;
     private final CourseService courseService;
-    private final EnrollmentRepository enrollmentRepository;
+    private final StudentEnrollmentRepository studentEnrollmentRepository;
 
     @Autowired
     public InstructorService(InstructorRepository instructorRepository,
                              CourseService courseService,
-                             EnrollmentRepository enrollmentRepository) {
+                             StudentEnrollmentRepository studentEnrollmentRepository) {
         this.instructorRepository = instructorRepository;
         this.courseService = courseService;
-        this.enrollmentRepository = enrollmentRepository;
+        this.studentEnrollmentRepository = studentEnrollmentRepository;
     }
 
     public List<Instructor> getAllInstructors() {
@@ -38,28 +38,33 @@ public class InstructorService {
     }
 
     public Instructor createInstructor(Instructor instructor) {
-        return instructorRepository.create(instructor);
+        return instructorRepository.save(instructor);
     }
 
     public Instructor updateInstructor(Long id, Instructor instructor) {
-        return instructorRepository.update(id, instructor);
+        Instructor existingInstructor = getInstructorById(id);
+        existingInstructor.setName(instructor.getName());
+        existingInstructor.setEmail(instructor.getEmail());
+        return instructorRepository.save(existingInstructor);
     }
 
     public Instructor deleteInstructorById(Long id) {
-        return instructorRepository.deleteById(id);
+        Instructor instructor = getInstructorById(id);
+        instructorRepository.delete(instructor);
+        return instructor;
     }
 
     public List<InstructorDetail> getInstructorDetails() {
         List<Instructor> instructors = instructorRepository.findAll();
         List<Course> allCourses = courseService.getAllCourses();
-        List<Enrollment> allEnrollments = enrollmentRepository.findAll();
+        List<StudentEnrollment> allEnrollments = studentEnrollmentRepository.findAll();
 
         return instructors.stream().map(instructor -> {
             List<Course> validCourses = allCourses.stream()
-                    .filter(course -> course.getInstructorId().equals(instructor.getId()))
+                    .filter(course -> course.getInstructor() != null && course.getInstructor().getId().equals(instructor.getId()))
                     .filter(course -> "Active".equalsIgnoreCase(course.getStatus()))
                     .filter(course -> allEnrollments.stream()
-                            .anyMatch(e -> e.getCourseId().equals(course.getId())))
+                            .anyMatch(e -> e.getCourse().getId().equals(course.getId())))
                     .collect(Collectors.toList());
             
             return new InstructorDetail(instructor, validCourses);
