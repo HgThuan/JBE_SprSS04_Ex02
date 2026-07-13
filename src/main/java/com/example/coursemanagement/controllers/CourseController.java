@@ -10,7 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 @RestController
 @RequestMapping("/courses")
 public class CourseController {
@@ -22,9 +23,13 @@ public class CourseController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<com.example.coursemanagement.dto.CourseResponse>>> getCourses() {
-        List<com.example.coursemanagement.dto.CourseResponse> data = courseService.getAllCourseResponses();
-        return ResponseEntity.ok(new ApiResponse<>(true, "Fetched all courses successfully", data));
+    public ResponseEntity<ApiResponse<Page<com.example.coursemanagement.dto.CourseResponse>>> getCourses(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String sortBy,
+            @RequestParam(defaultValue = "DESC") Sort.Direction direction) {
+        Page<com.example.coursemanagement.dto.CourseResponse> data = courseService.getPagedCourses(page, size, sortBy, direction);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Fetched courses successfully", data));
     }
 
     @GetMapping("/{id}")

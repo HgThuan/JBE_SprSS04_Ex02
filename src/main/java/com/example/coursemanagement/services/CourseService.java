@@ -11,7 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 @Service
 public class CourseService {
     private final CourseRepository courseRepository;
@@ -89,5 +92,19 @@ public class CourseService {
                 course.getStatus(),
                 instructorResponse
         );
+    }
+
+    public Page<com.example.coursemanagement.dto.CourseResponse> getPagedCourses(int page, int size, String sortBy, Sort.Direction direction) {
+        if (page < 0) {
+            page = 0;
+        }
+        if (sortBy == null || sortBy.trim().isEmpty()) {
+            sortBy = "id";
+        }
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
+        Page<Course> coursePage = courseRepository.findAll(pageable);
+
+        return coursePage.map(this::mapToCourseResponse);
     }
 }
