@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
+import com.example.coursemanagement.enums.CourseStatus;
+
 @RestController
 @RequestMapping("/courses")
 public class CourseController {
@@ -27,8 +29,9 @@ public class CourseController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(required = false) String sortBy,
-            @RequestParam(defaultValue = "DESC") Sort.Direction direction) {
-        com.example.coursemanagement.dto.PageResponse<com.example.coursemanagement.dto.CourseResponse> data = courseService.getPagedCourses(page, size, sortBy, direction);
+            @RequestParam(defaultValue = "DESC") Sort.Direction direction,
+            @RequestParam(defaultValue = "ACTIVE") CourseStatus status) {
+        com.example.coursemanagement.dto.PageResponse<com.example.coursemanagement.dto.CourseResponse> data = courseService.getPagedCoursesByStatus(page, size, sortBy, direction, status);
         return ResponseEntity.ok(new ApiResponse<>(true, "Fetched courses successfully", data));
     }
 

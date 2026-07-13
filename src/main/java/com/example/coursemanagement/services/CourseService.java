@@ -15,6 +15,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import com.example.coursemanagement.enums.CourseStatus;
+
 @Service
 public class CourseService {
     private final CourseRepository courseRepository;
@@ -117,4 +119,26 @@ public class CourseService {
         );
     }
 
+    public com.example.coursemanagement.dto.PageResponse<com.example.coursemanagement.dto.CourseResponse> getPagedCoursesByStatus(int page, int size, String sortBy, Sort.Direction direction, CourseStatus status) {
+        if (page < 0) {
+            page = 0;
+        }
+        if (sortBy == null || sortBy.trim().isEmpty()) {
+            sortBy = "id";
+        }
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
+        Page<Course> coursePage = courseRepository.findAllByStatus(status, pageable);
+        
+        Page<com.example.coursemanagement.dto.CourseResponse> mappedPage = coursePage.map(this::mapToCourseResponse);
+
+        return new com.example.coursemanagement.dto.PageResponse<>(
+                mappedPage.getContent(),
+                mappedPage.getNumber(),
+                mappedPage.getSize(),
+                mappedPage.getTotalElements(),
+                mappedPage.getTotalPages(),
+                mappedPage.isLast()
+        );
+    }
 }
