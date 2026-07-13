@@ -29,9 +29,10 @@ public class CourseController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(required = false) String sortBy,
-            @RequestParam(defaultValue = "DESC") Sort.Direction direction,
-            @RequestParam(defaultValue = "ACTIVE") CourseStatus status) {
-        com.example.coursemanagement.dto.PageResponse<com.example.coursemanagement.dto.CourseResponse> data = courseService.getPagedCoursesByStatus(page, size, sortBy, direction, status);
+            @RequestParam(required = false) Sort.Direction direction,
+            @RequestParam(required = false) CourseStatus status,
+            @RequestParam(required = false) String keyword) {
+        com.example.coursemanagement.dto.PageResponse<com.example.coursemanagement.dto.CourseResponse> data = courseService.getPagedCoursesByStatus(page, size, sortBy, direction, status, keyword);
         return ResponseEntity.ok(new ApiResponse<>(true, "Fetched courses successfully", data));
     }
 

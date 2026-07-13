@@ -13,6 +13,6 @@ import com.example.coursemanagement.enums.CourseStatus;
 public interface CourseRepository extends JpaRepository<Course, Long> {
     boolean existsByIdAndStatus(Long id, String status);
 
-    @Query("SELECT c FROM Course c WHERE c.status = :#{#status.name()}")
-    Page<Course> findAllByStatus(@Param("status") CourseStatus status, Pageable pageable);
+    @Query("SELECT c FROM Course c WHERE (:status IS NULL OR c.status = :status) AND (:keyword IS NULL OR LOWER(c.title) LIKE LOWER(CONCAT('%', :keyword, '%')))")
+    Page<Course> searchCourses(@Param("status") String status, @Param("keyword") String keyword, Pageable pageable);
 }

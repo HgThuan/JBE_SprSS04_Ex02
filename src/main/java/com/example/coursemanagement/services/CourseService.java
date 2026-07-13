@@ -119,16 +119,21 @@ public class CourseService {
         );
     }
 
-    public com.example.coursemanagement.dto.PageResponse<com.example.coursemanagement.dto.CourseResponse> getPagedCoursesByStatus(int page, int size, String sortBy, Sort.Direction direction, CourseStatus status) {
+    public com.example.coursemanagement.dto.PageResponse<com.example.coursemanagement.dto.CourseResponse> getPagedCoursesByStatus(int page, int size, String sortBy, Sort.Direction direction, CourseStatus status, String keyword) {
         if (page < 0) {
             page = 0;
         }
-        if (sortBy == null || sortBy.trim().isEmpty()) {
-            sortBy = "id";
+
+        Pageable pageable;
+        if (sortBy != null && !sortBy.trim().isEmpty()) {
+            Sort sort = (direction != null) ? Sort.by(direction, sortBy) : Sort.by(sortBy);
+            pageable = PageRequest.of(page, size, sort);
+        } else {
+            pageable = PageRequest.of(page, size);
         }
 
-        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
-        Page<Course> coursePage = courseRepository.findAllByStatus(status, pageable);
+        String statusStr = (status != null) ? status.name() : null;
+        Page<Course> coursePage = courseRepository.searchCourses(statusStr, keyword, pageable);
         
         Page<com.example.coursemanagement.dto.CourseResponse> mappedPage = coursePage.map(this::mapToCourseResponse);
 
