@@ -94,7 +94,7 @@ public class CourseService {
         );
     }
 
-    public Page<com.example.coursemanagement.dto.CourseResponse> getPagedCourses(int page, int size, String sortBy, Sort.Direction direction) {
+    public com.example.coursemanagement.dto.PageResponse<com.example.coursemanagement.dto.CourseResponse> getPagedCourses(int page, int size, String sortBy, Sort.Direction direction) {
         if (page < 0) {
             page = 0;
         }
@@ -104,7 +104,17 @@ public class CourseService {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
         Page<Course> coursePage = courseRepository.findAll(pageable);
+        
+        Page<com.example.coursemanagement.dto.CourseResponse> mappedPage = coursePage.map(this::mapToCourseResponse);
 
-        return coursePage.map(this::mapToCourseResponse);
+        return new com.example.coursemanagement.dto.PageResponse<>(
+                mappedPage.getContent(),
+                mappedPage.getNumber(),
+                mappedPage.getSize(),
+                mappedPage.getTotalElements(),
+                mappedPage.getTotalPages(),
+                mappedPage.isLast()
+        );
     }
+
 }

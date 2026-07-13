@@ -23,12 +23,12 @@ public class CourseController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<Page<com.example.coursemanagement.dto.CourseResponse>>> getCourses(
+    public ResponseEntity<ApiResponse<com.example.coursemanagement.dto.PageResponse<com.example.coursemanagement.dto.CourseResponse>>> getCourses(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(required = false) String sortBy,
             @RequestParam(defaultValue = "DESC") Sort.Direction direction) {
-        Page<com.example.coursemanagement.dto.CourseResponse> data = courseService.getPagedCourses(page, size, sortBy, direction);
+        com.example.coursemanagement.dto.PageResponse<com.example.coursemanagement.dto.CourseResponse> data = courseService.getPagedCourses(page, size, sortBy, direction);
         return ResponseEntity.ok(new ApiResponse<>(true, "Fetched courses successfully", data));
     }
 
